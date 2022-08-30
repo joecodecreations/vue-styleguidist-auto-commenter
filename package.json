@@ -10,12 +10,16 @@
     "type": "git",
     "url": "git+https://github.com/joecodecreations/vue-styleguidist-auto-commenter.git"
   },
+  "bin": {
+    "auto-styleguidst": "./main.js",
+    "vasg": "./main.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.5.0",
-    "commander": "^2.9.0",
+    "commander": "^9.4.0",
     "fs": "0.0.1-security",
     "fs-extra": "^3.0.1",
     "inquirer": "^3.0.6",
