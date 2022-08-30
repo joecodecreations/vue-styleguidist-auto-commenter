@@ -1,2 +1,2 @@
 # vue-styleguidist-auto-commenter
-will auto generate the contents for your Vue project for vue-styleguidist
+Node module to auto generate the comments necessary to automatically build out the information in your project for (vue-styleguidist)[https://github.com/vue-styleguidist/vue-styleguidist]

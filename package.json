@@ -1,0 +1,20 @@
+{
+  "name": "vue-styleguidist-auto-commenter",
+  "version": "1.0.0",
+  "description": "Node module to auto generate the comments necessary to automatically build out the information in your project for (vue-styleguidist)[https://github.com/vue-styleguidist/vue-styleguidist]",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joecodecreations/vue-styleguidist-auto-commenter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joecodecreations/vue-styleguidist-auto-commenter/issues"
+  },
+  "homepage": "https://github.com/joecodecreations/vue-styleguidist-auto-commenter#readme"
+}
