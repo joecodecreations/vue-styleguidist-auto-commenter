@@ -2,7 +2,8 @@
 
 const program = require('commander');
 const shell = require('shelljs');
-const fs = require('fs');
+const fsSync = require('fs');
+const fs = require('fs').promises;
 const chalk = require('chalk');
 const packageJSON = require('./package.json');
 const { exec } = require('child_process');
@@ -54,9 +55,9 @@ function occurrences(string, subString, allowOverlapping) {
     return n;
 }
 
-var processFiles = function (dir, done) {
+var gatherFilesList = function (dir, done) {
     var currentDirectory = process.cwd();
-    if(settings.absoluteMode && dir.indexOf(currentDirectory) === -1){
+    if(dir.indexOf(currentDirectory) === -1){
     dir = currentDirectory+'/'+dir;
     }
     var includedFiles = [];
@@ -64,7 +65,9 @@ var processFiles = function (dir, done) {
     var fileCount = 0;
     const filePath =settings.relativeMode?`${currentDirectory}${dir}`:dir;
 
-    fs.readdir(dir, function (err, list) {
+    console.log('dir top', dir);
+
+    fsSync.readdir(dir, {encoding:'UTF-8'}, function (err, list) {
 
         if (err){
             err.message = `Error reading directory ${dir}`;
@@ -72,20 +75,22 @@ var processFiles = function (dir, done) {
         } 
 
         var pending = list.length;
+        console.log('list',list);
         if (!pending){
              return done(null, {includedFiles, excludedFiles, fileCount});
         }
 
         list.forEach(function (file) {
+            console.log('inside file',file);
             let fileWithPath = dir + '/'+file;
             if(fileWithPath.indexOf('//')!==-1){
                 fileWithPath = fileWithPath.replace('//','/');
             }
 
             if(occurrences(dir, filePath)>1) fileWithPath.replace(dir,'');
+            console.log('fileWithPath',fileWithPath);
 
-
-            fs.stat(fileWithPath, function (err, stat) {
+            fsSync.stat(fileWithPath, function (err, stat) {
                 if(err){
                     console.log('ERROR HERE',err);
                     return done(err);
@@ -93,10 +98,11 @@ var processFiles = function (dir, done) {
 
                 // deep dive into directories but not ones that are ignored
                 if (stat && stat.isDirectory() && (ignoreList.some(ignoreItem => file.includes(ignoreItem)) === false)) {
-                    
+                    console.log('IS A DIRECTORY!!!!', fileWithPath);
                     // recursively start this process again for the next directory
 
-                    processFiles(file, function (err, res) {
+                    console.log(`\n\n\n${fileWithPath} - ${file}`);
+                    gatherFilesList(fileWithPath, function (err, res) {
                         if(res && res.includedFiles && Array.isArray(res.includedFiles))includedFiles = includedFiles.concat(res.includedFiles);
                         if (!--pending){
                              return done(null, {includedFiles, excludedFiles, fileCount});
@@ -105,7 +111,7 @@ var processFiles = function (dir, done) {
      
     
                 // if files are not in the ingnore list
-                } else if ((ignoreList.some(ignoreItem => file.includes(ignoreItem)) === false))  { 
+                } else if ((ignoreList.some(ignoreItem => file.includes(ignoreItem)) === false) && file.indexOf('.vue')!== -1)  { 
 
                     fileCount++;
                     includedFiles.push(fileWithPath);
@@ -128,7 +134,7 @@ var processFiles = function (dir, done) {
 };
 
 
-function finishedProcessing(err, response){
+function processList(err, response){
     if (err){
         console.log('ERROR',err);
         return;
@@ -139,8 +145,46 @@ function finishedProcessing(err, response){
     console.log('\n\n not included files',response.excludedFiles);
 }
 
+async function processSingle(fileName){
 
+    // get file contents
+    const fileContents = await fs.readFile(fileName, 'utf8');
+    // console.log('\n\n\n'+fileContents);
+
+    const componentName = getComponentName(fileContents);
+    console.log('componentName',componentName);
+    let topContent = `
+    /**
+     * Documents for our ${componentName} component
+     * @example ./docs/${componentName}.md
+     * @example ../../../docs/ButtonConclusion.md
+     * @displayName ${componentName}
+    */`;
+
+    if(!fileHasDocsAlready(fileContents, componentName)){
+        // no docs yet
+        fileContents 
+    } else {
+        // has docs
+
+    }
+}
+
+function getComponentName(fileContent){
+    console.log(fileContent)
+    return getStringInbetweenTwoStrings(fileContent, 'name: \'', '\',');
+}
+function getStringInbetweenTwoStrings(str, stringA, stringB) {
+   return str.split(stringA).pop().split(stringB)[0]; // returns 'two'
+}
+function fileHasDocsAlready(content, componentName){
+    return contentContainsString(content,`@displayName ${componentName}`);
+}
+function contentContainsString(content, string){
+    return content.indexOf(string) !== -1;
+}
 
 
 const filePath = settings.absoluteMode?settings.pathToProject:currentDirectory+settings.pathToProject;
-processFiles(filePath, finishedProcessing);
+// gatherFilesList(filePath, processList);
+processSingle();
