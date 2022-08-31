@@ -12,7 +12,8 @@
   },
   "bin": {
     "auto-styleguidst": "./main.js",
-    "vasg": "./main.js"
+    "vasg": "./main.js",
+    "autoguide": "./main.js"
   },
   "keywords": [],
   "author": "",
