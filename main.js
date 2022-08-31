@@ -8,6 +8,12 @@ const packageJSON = require('./package.json');
 const { exec } = require('child_process');
 var path = require('path');
 const utils = require('./utils');
+const ignoreList = require('./config/ignoreList');
+const { truncate } = require('fs-extra');
+
+
+/* Program Variables */
+
 
 program
     .version('1.0.0')
@@ -28,15 +34,20 @@ const settings = utils.settings.construct(options);
 console.info('settings we are using');
 console.log(settings);
 
-var walk = function (dir, done) {
-    var results = [];
+var processFiles = function (dir, done) {
+    var includedFiles = [];
+    var excludedFiles = [];
+    var fileCount = 0;
     fs.readdir(dir, function (err, list) {
 
         if (err) return done(err);
 
         var pending = list.length;
 
-        if (!pending) return done(null, results);
+        if (!pending){
+            console.log('RETURN A')
+             return done(null, {includedFiles, excludedFiles, fileCount});
+        }
 
         list.forEach(function (file) {
 
@@ -44,30 +55,47 @@ var walk = function (dir, done) {
 
             fs.stat(file, function (err, stat) {
 
-                if (stat && stat.isDirectory()) {
+                // deep dive into directories but not ones that are ignored
+                if (stat && stat.isDirectory() && (ignoreList.some(ignoreItem => file.includes(ignoreItem)) === false)) {
                     
                     // recursively start this process again for the next directory
-                    walk(file, function (err, res) {
-                        results = results.concat(res);
-                        if (!--pending) done(null, results);
+                    processFiles(file, function (err, res) {
+                        includedFiles = includedFiles.concat(res.includedFiles);
+                        if (!--pending){
+                             return done(null, {includedFiles, excludedFiles, fileCount});
+                        }
                     });
+     
+    
+                // if files are not in the ingnore list
+                } else if ((ignoreList.some(ignoreItem => file.includes(ignoreItem)) === false))  { 
+
+                    fileCount++;
+                    includedFiles.push(file);
+                    if (!--pending){
+                         return done(null, {includedFiles, excludedFiles, fileCount});
+                    }
 
                 } else {
-
-                    results.push(file);
-                    if (!--pending) done(null, results);
-
+                    // Files are ignored
+                    excludedFiles.push(file);
+                    if (!--pending){
+                         return done(null, {includedFiles, excludedFiles, fileCount});
+                    }
                 }
+            
+
             });
         });
     });
 };
 
 
-// walk(path, done);
-
-const done = (err, results) => {
-    if (err) throw err;
-    console.log('results', results);
+function finishedProcessing(err, response){
+    console.log('final results here',response.includedFiles);
+    console.log('\n\nincluded files',response.includedFiles.length);
+    console.log('\n\n not included files',response.excludedFiles.length);
+    console.log('\n\n not included files',response.excludedFiles);
 }
 
+processFiles('/Users/josephsanchez/Desktop/Projects/vue-styleguidist-auto-commenter', finishedProcessing);

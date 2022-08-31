@@ -1,0 +1,17 @@
+module.exports = [
+    'node_modules',
+    '.md',
+    '.git',
+    '.gitignore',
+    'LICENSE',
+    '.gitattributes',
+    '.DS_Store',
+    'README.md',
+    'package.json',
+    'package-lock.json',
+    'yarn.lock',
+    'yarn-error.log',
+    'yarn.log',
+    'yarn-metadata.json',
+    'yarn-integrity.json',
+    'yarn-lock.json']
