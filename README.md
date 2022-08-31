@@ -1,8 +1,12 @@
 # vue-styleguidist-auto-commenter
 
+<div style="color:red">
+
 # WORK IN PROGRESS | CURRENTLY NOT FINISHED
 
-# DO NOT USE, WILL UPDATE THIS DOC WHEN IT'S READY
+DO NOT USE, WILL UPDATE THIS DOC WHEN IT'S READY
+
+</div>
 
 ## Summary
 Globally installed node module that will help you automatically generate files and update existing `.vue` files with relevant information to auto-populate your vue repository for [vue-styleguidist](https://github.com/vue-styleguidist/vue-styleguidist)
