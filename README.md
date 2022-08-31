@@ -5,7 +5,7 @@
 # DO NOT USE, WILL UPDATE THIS DOC WHEN IT'S READY
 
 ## Summary
-Globally installed node module that will help you automatically generate files and update existing `.vue` files with relevant information to auto-populate your vue repository for (vue-styleguidist)[https://github.com/vue-styleguidist/vue-styleguidist]
+Globally installed node module that will help you automatically generate files and update existing `.vue` files with relevant information to auto-populate your vue repository for [vue-styleguidist](https://github.com/vue-styleguidist/vue-styleguidist)
 
 <div style="background:lightgrey; padding:50px;">
 
@@ -19,7 +19,7 @@ Globally installed node module that will help you automatically generate files a
 
 ## Prerequisites 
 
-1. Install (vue-styleguidist)[https://github.com/vue-styleguidist/vue-styleguidist] by following their docs and configuration setup as this project will not automate installing the core settings and module
+1. Install [vue-styleguidist](https://github.com/vue-styleguidist/vue-styleguidist) by following their docs and configuration setup as this project will not automate installing the core settings and module
 
 </div>
 
