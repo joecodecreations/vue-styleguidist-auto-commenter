@@ -38,7 +38,7 @@ Globally installed node module that will help you automatically generate files a
 
 `-R` or `--report` (Set by Default) Enables a report to be generated in dry and live mode 
 
-`-X` or `--report-location` (Default is `./Reports`) Sets a new location for where your report will be saved (`--absolute` flag will being used will also require this to be an absolute path)
+`-X` or `--report-location` Sets a new location for where your report will be saved. If you use the `--absolute` flag the report location will ALSO need to be absolute. (Report location default is `./` )
 
 `-H` or `--help` Will provide you some help options (like a repeat of this menu :) ) 
 </div>
